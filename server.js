@@ -9,7 +9,6 @@ app.use(express.json());
 
 let db;
 
-// Init database
 async function initDb() {
   db = await open({
     filename: "./purchases.db",
@@ -22,23 +21,50 @@ async function initDb() {
       productId TEXT NOT NULL
     )
   `);
+  await db.exec(`
+    CREATE INDEX IF NOT EXISTS idx_wallet ON purchases(walletAddress);
+  `);
 }
 initDb();
 
-// POST /purchases
 app.post("/purchases", async (req, res) => {
-  const { walletAddress, productId } = req.body;
-  if (!walletAddress || !productId) return res.status(400).json({ error: "Missing fields" });
-  await db.run("INSERT INTO purchases (walletAddress, productId) VALUES (?, ?)", [walletAddress, productId]);
-  res.json({ success: true });
+  try {
+    let { walletAddress, productId } = req.body;
+    if (!walletAddress || !productId) {
+      return res.status(400).json({ error: "Missing fields" });
+    }
+
+    walletAddress = walletAddress.toLowerCase();
+
+    await db.run(
+      "INSERT INTO purchases (walletAddress, productId) VALUES (?, ?)",
+      [walletAddress, productId]
+    );
+
+    console.log(`[POST] Purchase saved: ${walletAddress} -> ${productId}`);
+    res.json({ success: true });
+  } catch (err) {
+    console.error("Errore POST /purchases:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
 });
 
-// GET /purchases/:wallet
 app.get("/purchases/:wallet", async (req, res) => {
-  const { wallet } = req.params;
-  const rows = await db.all("SELECT productId FROM purchases WHERE walletAddress = ?", [wallet]);
-  res.json(rows.map(r => r.productId));
+  try {
+    const wallet = req.params.wallet.toLowerCase();
+    const rows = await db.all(
+      "SELECT productId FROM purchases WHERE walletAddress = ?",
+      [wallet]
+    );
+    console.log(`[GET] Purchases for ${wallet}: ${rows.map(r => r.productId)}`);
+    res.json(rows.map((r) => r.productId));
+  } catch (err) {
+    console.error("Errore GET /purchases:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
 });
 
-const PORT = 4000;
-app.listen(PORT, () => console.log(`Backend running on http://localhost:${PORT}`));
+const PORT = process.env.PORT || 4000;
+app.listen(PORT, () =>
+  console.log(`Backend running on port ${PORT}`)
+);

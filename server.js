@@ -2,6 +2,8 @@ import express from "express";
 import sqlite3 from "sqlite3";
 import { open } from "sqlite";
 import cors from "cors";
+import path from "path";
+import fs from "fs";
 
 const app = express();
 app.use(cors());
@@ -9,9 +11,15 @@ app.use(express.json());
 
 let db;
 
+const DB_PATH = path.join(process.cwd(), "purchases.db");
+
+if (!fs.existsSync(DB_PATH)) {
+  fs.writeFileSync(DB_PATH, "");
+}
+
 async function initDb() {
   db = await open({
-    filename: "./purchases.db",
+    filename: DB_PATH,
     driver: sqlite3.Database,
   });
   await db.exec(`
@@ -24,7 +32,9 @@ async function initDb() {
   await db.exec(`
     CREATE INDEX IF NOT EXISTS idx_wallet ON purchases(walletAddress);
   `);
+  console.log("✅ Database initialized at", DB_PATH);
 }
+
 initDb();
 
 app.post("/purchases", async (req, res) => {
@@ -66,5 +76,5 @@ app.get("/purchases/:wallet", async (req, res) => {
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () =>
-  console.log(`Backend running on port ${PORT}`)
+  console.log(`✅ Backend running on port ${PORT}`)
 );

@@ -12,10 +12,10 @@ A lightweight backend service for the **YogaEcommerce dApp**, responsible for st
 
 ## 🛠 Tech Stack
 
-- Node.js
-- Express
-- SQLite
-- cors
+- [Node.js](https://nodejs.org/en)
+- [Express](https://expressjs.com/)
+- [SQLite](https://www.sqlite.org/index.html)
+- [cors](https://www.npmjs.com/package/cors)
 
 ## 📂 Project Structure
 
@@ -46,7 +46,7 @@ npm start
   ```
 By default, the backend runs on http://localhost:4000
 
-You can change the port by setting the PORT environment variable.
+You can change the port by setting the ```PORT``` environment variable.
 
 ## 📡 API Endpoints
 
@@ -100,7 +100,7 @@ GET http://localhost:4000/purchases/0x123abc...
 - The database is stored in ```purchases.db``` at the project root.
 - Automatically initialized on first run.
 - Tables:
-  - *purchases*
+  - **purchases**
     - ```id``` (INTEGER, auto-increment, primary key)
     - ```walletAddress``` (TEXT, lowercase enforced)
     - ```productId (TEXT)```

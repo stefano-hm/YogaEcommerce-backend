@@ -45,6 +45,7 @@ Start the server:
 npm start
   ```
 By default, the backend runs on http://localhost:4000
+
 You can change the port by setting the PORT environment variable.
 
 ## 📡 API Endpoints
@@ -54,64 +55,63 @@ Store a new purchase linked to a wallet.
 
 - **Request body (JSON):**
   
-  ```bash
+```bash
 {
   "walletAddress": "0x123abc...",
   "productId": "yoga-course-1"
 }
-  ```
+```
 
 - **Response:**
 
-
+```bash
 {
   "success": true
 }
+```
 
+- **Example with curl:**
 
-Example with curl:
-
+```bash
 curl -X POST http://localhost:4000/purchases \
      -H "Content-Type: application/json" \
      -d '{"walletAddress":"0x123abc...", "productId":"yoga-course-1"}'
+```
 
-GET /purchases/:wallet
+**GET /purchases/:wallet**
 
 Retrieve all purchased product IDs for a given wallet.
 
-Request:
+- **Request:**
 
+```bash
 GET http://localhost:4000/purchases/0x123abc...
+```
 
+- **Response:**
 
-Response:
-
+```bash
 ["yoga-course-1", "yoga-course-2"]
+```
 
-💾 Database
+## 💾 Database
 
-The database is stored in purchases.db at the project root.
+- The database is stored in ```purchases.db``` at the project root.
+- Automatically initialized on first run.
+- Tables:
 
-Automatically initialized on first run.
+ - *purchases*
 
-Tables:
+       - ```id``` (INTEGER, auto-increment, primary key)
+       - ```walletAddress``` (TEXT, lowercase enforced)
+       - ```productId (TEXT)```
 
-purchases
+## 🔧 Development Notes
 
-id (INTEGER, auto-increment, primary key)
+- Wallet addresses are normalized to lowercase before storage.
+- The API currently only tracks ```walletAddress``` and ```productId```.
+- Can be extended with timestamps, course metadata, or user profiles if needed.
 
-walletAddress (TEXT, lowercase enforced)
+## 📜 License
 
-productId (TEXT)
-
-🔧 Development Notes
-
-Wallet addresses are normalized to lowercase before storage.
-
-The API currently only tracks walletAddress and productId.
-
-Can be extended with timestamps, course metadata, or user profiles if needed.
-
-📜 License
-
-This project is licensed under the MIT License.
+This project is licensed under the **MIT License**.

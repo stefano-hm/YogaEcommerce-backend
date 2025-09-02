@@ -51,6 +51,7 @@ You can change the port by setting the PORT environment variable.
 ## 📡 API Endpoints
 
 **POST /purchases**
+
 Store a new purchase linked to a wallet.
 
 - **Request body (JSON):**
@@ -99,16 +100,14 @@ GET http://localhost:4000/purchases/0x123abc...
 - The database is stored in ```purchases.db``` at the project root.
 - Automatically initialized on first run.
 - Tables:
-
- - *purchases*
-
-       - ```id``` (INTEGER, auto-increment, primary key)
-       - ```walletAddress``` (TEXT, lowercase enforced)
-       - ```productId (TEXT)```
+  - *purchases*
+    - ```id``` (INTEGER, auto-increment, primary key)
+    - ```walletAddress``` (TEXT, lowercase enforced)
+    - ```productId (TEXT)```
 
 ## 🔧 Development Notes
 
-- Wallet addresses are normalized to lowercase before storage.
+- Wallet addresses are normalized to **lowercase** before storage.
 - The API currently only tracks ```walletAddress``` and ```productId```.
 - Can be extended with timestamps, course metadata, or user profiles if needed.
 

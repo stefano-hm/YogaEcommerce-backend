@@ -6,7 +6,17 @@ import path from "path";
 import fs from "fs";
 
 const app = express();
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      "https://yoga-ecommerce.vercel.app",
+      "http://localhost:5173", 
+    ],
+    methods: ["GET", "POST"],
+    allowedHeaders: ["Content-Type"],
+  })
+);
+
 app.use(express.json());
 
 let db;

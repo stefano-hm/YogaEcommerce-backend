@@ -11,6 +11,7 @@ app.use(
     origin: [
       "https://yoga-ecommerce.vercel.app",
       "http://localhost:5173", 
+      "http://127.0.0.1:5173"
     ],
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Type"],
@@ -22,10 +23,6 @@ app.use(express.json());
 let db;
 
 const DB_PATH = path.join(process.cwd(), "purchases.db");
-
-if (!fs.existsSync(DB_PATH)) {
-  fs.writeFileSync(DB_PATH, "");
-}
 
 async function initDb() {
   db = await open({
